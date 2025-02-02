@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
 
 class ContactEntity {
   int id;
@@ -52,7 +51,7 @@ class ContactEntity {
       name: map['name'] as String,
       phoneNumber: map['phone'] as String,
       email: map['email'] as String,
-      image:map['image'] as String,
+      image: map['image'] as String,
       address: Coordinates.fromString(map['latLng'] as String),
     );
   }
@@ -127,7 +126,7 @@ class Coordinates {
     final array = coordinates.split(", ");
     return Coordinates(
       latitude: double.parse(array[0]),
-      longitude:double.parse(array[1]),
+      longitude: double.parse(array[1]),
     );
   }
 
@@ -137,8 +136,7 @@ class Coordinates {
       Coordinates.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      '$latitude, $longitude';
+  String toString() => '$latitude, $longitude';
 
   @override
   bool operator ==(covariant Coordinates other) {

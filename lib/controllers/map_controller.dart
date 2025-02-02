@@ -5,7 +5,6 @@ import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/contact_repository.dart';
 import 'package:google_maps/views/map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 
 class MapPageController extends StatefulWidget {
   const MapPageController({super.key});
@@ -36,7 +35,6 @@ class MapPageControllerState extends State<MapPageController> {
 
     try {
       final result = await _contactRepository.getContacts();
-      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultado eh $result");
       final markers = await _createMarkers(result);
       setState(() {
         contacts = result;
@@ -60,7 +58,7 @@ class MapPageControllerState extends State<MapPageController> {
   //     return Marker(
   //       markerId: MarkerId(contact.id.toString()),
   //       position: LatLng(contact.address.latitude, contact.address.longitude),
-        
+
   //     );
   //   }).toSet();
   // }
@@ -83,7 +81,7 @@ class MapPageControllerState extends State<MapPageController> {
     );
   }
 
-   Future<Set<Marker>> _createMarkers(List<ContactEntity> contacts) async {
+  Future<Set<Marker>> _createMarkers(List<ContactEntity> contacts) async {
     Set<Marker> markers = {};
 
     for (ContactEntity contact in contacts) {
@@ -97,7 +95,8 @@ class MapPageControllerState extends State<MapPageController> {
     late BitmapDescriptor icon;
 
     // final http.Response response = await http.get(Uri.parse(contact.image));
-    icon = BitmapDescriptor.bytes(base64Decode(contact.image), height: 100, width: 100);
+    icon = BitmapDescriptor.bytes(base64Decode(contact.image),
+        height: 100, width: 100);
 
     Marker marker = Marker(
       infoWindow: InfoWindow(title: contact.name),

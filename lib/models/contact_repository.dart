@@ -16,8 +16,6 @@ class ContactRepository {
         TABLE_NAME,
         model.toMap(),
       );
-
-      print(">>>>>>>>>> CREATED contact ${model.name} on index $index with success!");
     } catch (ex) {
       print(ex);
       return;
@@ -25,7 +23,6 @@ class ContactRepository {
   }
 
   Future<Database> _getDatabase() async {
-    
     return openDatabase(
       join(await getDatabasesPath(), DATABASE_NAME),
       onCreate: (db, version) {
@@ -38,21 +35,14 @@ class ContactRepository {
   Future<List<ContactEntity>> getContacts() async {
     try {
       final Database db = await _getDatabase();
-      final a = await db.query(TABLE_NAME);
-      final List<Map<String, dynamic>> contacts = a;
-      print(a);
-      print(ContactEntity.fromMap(contacts[0]));
-      print(">>>>>>>>>> READED ${contacts.length} contacts with success!");
+      final List<Map<String, dynamic>> contacts = await db.query(TABLE_NAME);
 
-      
       final list = List.generate(
         contacts.length,
         (i) {
           return ContactEntity.fromMap(contacts[i]);
         },
       );
-
-      print("Lista eh $list");
 
       return list;
     } catch (ex) {
@@ -88,55 +78,5 @@ class ContactRepository {
     } catch (ex) {
       print(ex);
     }
-  }
-
-  Future<List<ContactEntity>> getMockContactList() async {
-    // Simula um atraso de 2 segundos
-    await Future.delayed(const Duration(seconds: 2));
-    return [
-      ContactEntity(
-        id: 1,
-        name: 'John Doe',
-        phoneNumber: '+1 (555) 123-4567',
-        email: 'johndoe@example.com',
-        image: 'https://randomuser.me/api/portraits/men/1.jpg',
-        address: Coordinates(
-            latitude: 37.7749, longitude: -122.4194), // São Francisco
-      ),
-      ContactEntity(
-        id: 2,
-        name: 'Jane Smith',
-        phoneNumber: '+1 (555) 987-6543',
-        email: 'janesmith@example.com',
-        image: 'https://randomuser.me/api/portraits/women/1.jpg',
-        address:
-            Coordinates(latitude: 34.0522, longitude: -118.2437), // Los Angeles
-      ),
-      ContactEntity(
-        id: 3,
-        name: 'Michael Johnson',
-        phoneNumber: '+1 (555) 555-5555',
-        email: 'michael.johnson@example.com',
-        image: 'https://randomuser.me/api/portraits/men/2.jpg',
-        address:
-            Coordinates(latitude: 40.7128, longitude: -74.0060), // Nova York
-      ),
-      ContactEntity(
-        id: 4,
-        name: 'Emily Davis',
-        phoneNumber: '+1 (555) 333-4444',
-        email: 'emily.davis@example.com',
-        image: 'https://randomuser.me/api/portraits/women/2.jpg',
-        address: Coordinates(latitude: 51.5074, longitude: -0.1278), // Londres
-      ),
-      ContactEntity(
-        id: 5,
-        name: 'Chris Brown',
-        phoneNumber: '+1 (555) 222-3333',
-        email: 'chris.brown@example.com',
-        image: 'https://randomuser.me/api/portraits/men/3.jpg',
-        address: Coordinates(latitude: 48.8566, longitude: 2.3522), // Paris
-      ),
-    ];
   }
 }

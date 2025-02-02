@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps/dependencies.dart';
 import 'package:google_maps/routing/router.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load();
   runApp(
     MultiProvider(
       providers: providers,
@@ -18,7 +19,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp.router(
       title: "Agenda Rubi",
       routerConfig: router,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps/colors.dart';
 import 'package:google_maps/components/button.dart';
 import 'package:google_maps/components/field_box.dart';
+import 'package:google_maps/components/places_search.dart';
 import 'package:google_maps/components/text_input.dart';
 import 'package:google_maps/controllers/create_contact_controller.dart';
 import 'package:provider/provider.dart';
@@ -106,6 +108,23 @@ class _ContactCreateViewState extends State<ContactCreateView> {
                   ),
                 ),
               ),
+              FieldBox(
+                title: 'Endereço',
+                inputWidget: controller.place == null
+                    ? Button(
+                        onPress: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GoogleMapSearchPlacesApi(
+                                  onSelect: controller.setPlace,
+                                ), // O widget que você deseja empurrar
+                              ));
+                        },
+                        title: 'Selecionar endereço',
+                        backgroundColor: Colors.greenAccent)
+                    : Text(controller.place!.name),
+              ),
             ],
           ),
         ),
@@ -116,6 +135,7 @@ class _ContactCreateViewState extends State<ContactCreateView> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<CreateContactController>(context);
+    controller.clearInputs();
     return Scaffold(
       appBar: AppBar(title: const Text('Novo contato')),
       body: Column(
@@ -126,7 +146,11 @@ class _ContactCreateViewState extends State<ContactCreateView> {
             padding: const EdgeInsets.all(20.0),
             child: Button(
               backgroundColor: AppColors.primaryBlue,
-              onPress: ()=>controller.submit(_nameController.text, _phoneNumberController.text, _emailController.text),
+              onPress: () {
+                controller.submit(_nameController.text,
+                    _phoneNumberController.text, _emailController.text);
+                GoRouter.of(context).pop();
+              },
               title: 'ENVIAR',
               isLoading: false,
             ),

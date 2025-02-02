@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:google_maps/controllers/contacts_controller.dart';
-import 'package:google_maps/controllers/create_contact_controller.dart';
 import 'package:google_maps/controllers/home_controller.dart';
 import 'package:google_maps/controllers/login_controller.dart';
 import 'package:google_maps/controllers/map_controller.dart';
@@ -22,6 +21,7 @@ final router = GoRouter(
     GoRoute(
         path: Routes.home, builder: (context, state) => const HomeController()),
     GoRoute(
-        path: Routes.createContact, builder: (context, state) => const ContactCreateView()),
+        path: Routes.createContact,
+        builder: (context, state) => ContactCreateView()),
   ],
 );

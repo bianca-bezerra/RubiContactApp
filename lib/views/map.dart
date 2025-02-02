@@ -19,7 +19,9 @@ class MapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mapa de contatos'),),
+      appBar: AppBar(
+        title: const Text('Mapa de contatos'),
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : markers.isEmpty
