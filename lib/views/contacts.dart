@@ -1,9 +1,10 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps/components/base_list.dart';
 import 'package:google_maps/models/contact_entity.dart';
+import 'package:google_maps/routing/routes.dart';
 
 class ContactListView extends StatelessWidget {
   final bool isLoading;
@@ -19,7 +20,9 @@ class ContactListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Contatos'),),
+      appBar: AppBar(
+        title: const Text('Contatos'),
+      ),
       body: SafeArea(
         child: RefreshIndicator(
             child: BaseList<ContactEntity>(
@@ -31,6 +34,13 @@ class ContactListView extends StatelessWidget {
               ),
             ),
             onRefresh: () => handleRefresh()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).push(Routes.createContact);
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -53,7 +63,8 @@ class ContactItem extends StatelessWidget {
             width: 80,
             child: CircleAvatar(
               radius: 30,
-              backgroundImage: MemoryImage(base64Decode(contact.image)), // Imagem do contato
+              backgroundImage:
+                  MemoryImage(base64Decode(contact.image)), // Imagem do contato
             ),
           ),
           const SizedBox(width: 10),

@@ -6,6 +6,7 @@ import 'package:google_maps/components/field_box.dart';
 import 'package:google_maps/components/places_search.dart';
 import 'package:google_maps/components/text_input.dart';
 import 'package:google_maps/controllers/create_contact_controller.dart';
+import 'package:google_maps/routing/routes.dart';
 import 'package:provider/provider.dart';
 
 class ContactCreateView extends StatefulWidget {
@@ -135,7 +136,7 @@ class _ContactCreateViewState extends State<ContactCreateView> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<CreateContactController>(context);
-    controller.clearInputs();
+    // controller.clearInputs();
     return Scaffold(
       appBar: AppBar(title: const Text('Novo contato')),
       body: Column(
@@ -149,9 +150,9 @@ class _ContactCreateViewState extends State<ContactCreateView> {
               onPress: () {
                 controller.submit(_nameController.text,
                     _phoneNumberController.text, _emailController.text);
-                GoRouter.of(context).pop();
+                GoRouter.of(context).replace(Routes.contactsList);
               },
-              title: 'ENVIAR',
+              title: 'Enviar',
               isLoading: false,
             ),
           ),

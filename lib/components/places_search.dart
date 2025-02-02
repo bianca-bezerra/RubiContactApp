@@ -3,10 +3,13 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/place_entity.dart';
+import 'package:google_maps/utils/get_current_position.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GoogleMapSearchPlacesApi extends StatefulWidget {
@@ -21,7 +24,8 @@ class GoogleMapSearchPlacesApi extends StatefulWidget {
 
 class _GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
   final _controller = TextEditingController();
-  final String _sessionToken = '1234567890';
+  String? _sessionToken;
+  var uuid = const Uuid();
   static final String? _placesApiKey = dotenv.env['GOOGLE_API_KEY'];
   List<dynamic> _placeList = [];
 
@@ -34,15 +38,23 @@ class _GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
   }
 
   _onChanged() {
+    if (_sessionToken == null) {
+      setState(() {
+        _sessionToken = uuid.v4();
+      });
+    }
     getSuggestion(_controller.text);
   }
 
   void getSuggestion(String input) async {
     try {
+      final Position currentPosition = await getCurrentPosition();
+      final locationRequest =
+          "&radius=10000&location=${currentPosition.latitude}%2C${currentPosition.longitude}";
       String baseURL =
           'https://maps.googleapis.com/maps/api/place/autocomplete/json';
       String request =
-          '$baseURL?input=$input&key=$_placesApiKey&sessiontoken=$_sessionToken';
+          '$baseURL?input=$input&key=$_placesApiKey&sessiontoken=$_sessionToken&language=pt-BR$locationRequest';
       var response = await http.get(Uri.parse(request));
       var data = json.decode(response.body);
       if (kDebugMode) {
@@ -89,7 +101,7 @@ class _GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
       appBar: AppBar(
         elevation: 0,
         title: const Text(
-          'Search places Api',
+          'Buscar local',
         ),
       ),
       body: Column(
@@ -100,7 +112,7 @@ class _GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
             child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                hintText: "Search your location here",
+                hintText: "Digite um endereço",
                 focusColor: Colors.white,
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 prefixIcon: const Icon(Icons.map),
