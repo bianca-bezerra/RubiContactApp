@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps/components/base_list.dart';
 import 'package:google_maps/models/contact_entity.dart';
@@ -51,7 +53,7 @@ class ContactItem extends StatelessWidget {
             width: 80,
             child: CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(contact.image), // Imagem do contato
+              backgroundImage: MemoryImage(base64Decode(contact.image)), // Imagem do contato
             ),
           ),
           const SizedBox(width: 10),

@@ -12,10 +12,12 @@ class ContactRepository {
     try {
       final Database db = await _getDatabase();
 
-      await db.insert(
+      final index = await db.insert(
         TABLE_NAME,
         model.toMap(),
       );
+
+      print(">>>>>>>>>> CREATED contact ${model.name} on index $index with success!");
     } catch (ex) {
       print(ex);
       return;
@@ -23,6 +25,7 @@ class ContactRepository {
   }
 
   Future<Database> _getDatabase() async {
+    
     return openDatabase(
       join(await getDatabasesPath(), DATABASE_NAME),
       onCreate: (db, version) {
@@ -35,14 +38,23 @@ class ContactRepository {
   Future<List<ContactEntity>> getContacts() async {
     try {
       final Database db = await _getDatabase();
-      final List<Map<String, dynamic>> maps = await db.query(TABLE_NAME);
+      final a = await db.query(TABLE_NAME);
+      final List<Map<String, dynamic>> contacts = a;
+      print(a);
+      print(ContactEntity.fromMap(contacts[0]));
+      print(">>>>>>>>>> READED ${contacts.length} contacts with success!");
 
-      return List.generate(
-        maps.length,
+      
+      final list = List.generate(
+        contacts.length,
         (i) {
-          return ContactEntity.fromMap(maps[i]);
+          return ContactEntity.fromMap(contacts[i]);
         },
       );
+
+      print("Lista eh $list");
+
+      return list;
     } catch (ex) {
       print(ex);
       return [];

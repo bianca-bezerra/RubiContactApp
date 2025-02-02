@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/contact_repository.dart';
@@ -35,6 +36,7 @@ class MapPageControllerState extends State<MapPageController> {
 
     try {
       final result = await _contactRepository.getContacts();
+      print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> resultado eh $result");
       final markers = await _createMarkers(result);
       setState(() {
         contacts = result;
@@ -73,7 +75,7 @@ class MapPageControllerState extends State<MapPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return MapInterface(
+    return MapView(
       mapController: _controller,
       initialPosition: _initalPosition,
       markers: _markers,
@@ -94,8 +96,8 @@ class MapPageControllerState extends State<MapPageController> {
   Future<Marker> _createMarker(ContactEntity contact) async {
     late BitmapDescriptor icon;
 
-    final http.Response response = await http.get(Uri.parse(contact.image));
-    icon = BitmapDescriptor.bytes(response.bodyBytes);
+    // final http.Response response = await http.get(Uri.parse(contact.image));
+    icon = BitmapDescriptor.bytes(base64Decode(contact.image), height: 100, width: 100);
 
     Marker marker = Marker(
       infoWindow: InfoWindow(title: contact.name),

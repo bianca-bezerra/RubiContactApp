@@ -31,7 +31,7 @@ class _ContactListControllerState extends State<ContactListController> {
     });
 
     try {
-      final result = await _contactRepository.getMockContactList();
+      final result = await _contactRepository.getContacts();
       setState(() {
         contacts = result;
         fetchedContacts = result;
