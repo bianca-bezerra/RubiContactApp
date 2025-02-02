@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps/assets.dart';
+import 'package:google_maps/models/contact_repository.dart';
 import 'package:google_maps/routing/routes.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  @override
   Widget build(BuildContext context) {
+    final contactsRepository = ContactRepository();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -36,11 +43,9 @@ class HomeView extends StatelessWidget {
                   child: Container(
                     width: 180,
                     height: 180,
-                     decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.amber,
-                      border: Border.all(
-                        width: 8, color: Colors.transparent
-                      ),
+                      border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: const Center(
@@ -58,11 +63,9 @@ class HomeView extends StatelessWidget {
                   child: Container(
                     width: 180,
                     height: 180,
-                     decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.amber,
-                      border: Border.all(
-                        width: 8, color: Colors.transparent
-                      ),
+                      border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: const Center(
@@ -87,11 +90,9 @@ class HomeView extends StatelessWidget {
                   child: Container(
                     width: 180,
                     height: 180,
-                     decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.amber,
-                      border: Border.all(
-                        width: 8, color: Colors.transparent
-                      ),
+                      border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: const Center(
@@ -102,23 +103,31 @@ class HomeView extends StatelessWidget {
                     ),
                   ),
                 ),
-                 const SizedBox(width: 20),
+                const SizedBox(width: 20),
                 GestureDetector(
-                  onTap: () =>
-                      {GoRouter.of(context).push(Routes.createContact)},
+                  onTap: () async {
+                    await contactsRepository.createMock();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Contato criado com sucesso!'),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
                   child: Container(
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
                       color: Colors.amber,
-                      border: Border.all(
-                        width: 8, color: Colors.transparent
-                      ),
+                      border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: const Center(
                       child: Text(
-                        'Criar contato',
+                        'Criar contato de teste',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
