@@ -6,7 +6,7 @@ import 'package:google_maps/controllers/map_controller.dart';
 import 'package:google_maps/routing/routes.dart';
 
 final router = GoRouter(
-  initialLocation: Routes.contactsList,
+  initialLocation: Routes.home,
   routes: [
     GoRoute(
         path: Routes.login,

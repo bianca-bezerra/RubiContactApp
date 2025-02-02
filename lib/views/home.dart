@@ -31,7 +31,7 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () => {GoRouter.of(context).go(Routes.map)},
+                  onTap: () => {GoRouter.of(context).push(Routes.map)},
                   child: Container(
                     width: 200,
                     height: 200,
@@ -45,7 +45,7 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 20),
-                GestureDetector(
+                GestureDetector(//TODO: Aparentemente esse jeito de pegar os toques tá defasado
                   onTap: () => {GoRouter.of(context).push(Routes.contactsList)},
                   child: Container(
                     width: 200,

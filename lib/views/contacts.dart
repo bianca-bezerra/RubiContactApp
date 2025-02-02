@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_maps/components/base_list.dart';
 import 'package:google_maps/models/contact_entity.dart';
@@ -16,7 +17,7 @@ class ContactListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text('Contatos'),),
       body: SafeArea(
         child: RefreshIndicator(
             child: BaseList<ContactEntity>(

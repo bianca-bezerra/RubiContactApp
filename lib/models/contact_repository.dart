@@ -5,7 +5,7 @@ import 'package:path/path.dart';
 const DATABASE_NAME = "AGENDA_RUBI";
 const TABLE_NAME = "CONTATOS";
 const CREATE_CONTACTS_TABLE_SCRIPT =
-    "CREATE TABLE contacts(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, image TEXT, latLng TEXT)";
+    "CREATE TABLE contatos(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, image TEXT, latLng TEXT)";
 
 class ContactRepository {
   Future create(ContactEntity model) async {

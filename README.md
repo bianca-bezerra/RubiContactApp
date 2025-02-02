@@ -1,16 +1,47 @@
-# google_maps
 
-A new Flutter project.
+# Agenda Rubi
 
-## Getting Started
+A simple app to manage your contacts.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Contacts CRUD
+- Preview your contacts on map
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`GOOGLE_API_KEY`
+## Run Locally
+
+Clone the project
+
+```bash
+git clone https://bianca-bezerra/RubiContactApp
+```
+
+Go to the project directory
+
+```bash
+cd RubiContactApp
+```
+
+Install dependencies
+
+```bash
+flutter pub get
+```
+
+Run the app
+
+```bash
+flutter run
+```
+
+
+## Authors
+
+- [@biancabzra](https://www.github.com/bianca-bezerra)
+- [@msruan](https://www.github.com/msruan)
