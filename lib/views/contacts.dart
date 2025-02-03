@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps/components/base_list.dart';
+import 'package:google_maps/controllers/contact_form_controller.dart';
 import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/contact_repository.dart';
 import 'package:google_maps/routing/routes.dart';
@@ -38,7 +39,16 @@ class ContactListView extends StatelessWidget {
                   contactsRepository.deleteContact(contact.id);
                   handleRefresh();
                 },
-                onEdit: (c) {},
+                onEdit: (contact) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ContactFormController(
+                        currentContact: contact,
+                      ), // O widget que você deseja empurrar
+                    ),
+                  );
+                },
               ),
             ),
             onRefresh: () => handleRefresh()),

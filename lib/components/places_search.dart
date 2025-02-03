@@ -57,10 +57,10 @@ class _GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
           '$baseURL?input=$input&key=$_placesApiKey&sessiontoken=$_sessionToken&language=pt-BR$locationRequest';
       var response = await http.get(Uri.parse(request));
       var data = json.decode(response.body);
-      if (kDebugMode) {
-        print('mydata');
-        print(data);
-      }
+      // if (kDebugMode) {
+      //   print('mydata');
+      //   print(data);
+      // }
       if (response.statusCode == 200) {
         setState(() {
           _placeList = json.decode(response.body)['predictions'];

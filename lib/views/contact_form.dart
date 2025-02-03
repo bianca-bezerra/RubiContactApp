@@ -1,48 +1,44 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:google_maps/colors.dart';
 import 'package:google_maps/components/button.dart';
 import 'package:google_maps/components/field_box.dart';
 import 'package:google_maps/components/places_search.dart';
 import 'package:google_maps/components/text_input.dart';
-import 'package:google_maps/controllers/create_contact_controller.dart';
-import 'package:google_maps/routing/routes.dart';
-import 'package:provider/provider.dart';
+import 'package:google_maps/controllers/contact_form_controller.dart';
+import 'package:google_maps/models/contact_entity.dart';
+import 'package:google_maps/utils/coalesce.dart';
 
-class ContactCreateView extends StatefulWidget {
-  // final VoidCallback onSubmit;
-  // final VoidCallback onImagePick;
+class ContactFormView extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController phoneNumberController;
+  final TextEditingController emailController;
+  final ContactEntity? currentContact;
+  final VoidCallback onSubmit;
+  final ImageController imageController;
+  final PlaceController placeController;
 
-  const ContactCreateView({
-    super.key,
-    // required this.onImagePick,
-    // required this.onSubmit,
-  });
+  const ContactFormView(
+      {super.key,
+      required this.formKey,
+      required this.nameController,
+      required this.phoneNumberController,
+      required this.emailController,
+      this.currentContact,
+      required this.onSubmit,
+      required this.imageController,
+      required this.placeController});
 
-  @override
-  State<ContactCreateView> createState() => _ContactCreateViewState();
-}
-
-class _ContactCreateViewState extends State<ContactCreateView> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneNumberController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildMainContent(CreateContactController controller) {
+  Widget _buildMainContent(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -55,7 +51,7 @@ class _ContactCreateViewState extends State<ContactCreateView> {
                     }
                     return null;
                   },
-                  controller: _nameController,
+                  controller: nameController,
                   hintText: 'Digite o nome completo da pessoa',
                 ),
               ),
@@ -69,7 +65,7 @@ class _ContactCreateViewState extends State<ContactCreateView> {
                     }
                     return null;
                   },
-                  controller: _phoneNumberController,
+                  controller: phoneNumberController,
                   hintText: 'Digite o número de telefone',
                 ),
               ),
@@ -83,14 +79,14 @@ class _ContactCreateViewState extends State<ContactCreateView> {
                     }
                     return null;
                   },
-                  controller: _emailController,
+                  controller: emailController,
                   hintText: 'Digite seu endereço de email',
                 ),
               ),
               FieldBox(
                 title: 'Foto',
                 inputWidget: GestureDetector(
-                  onTap: () => controller.pickImage(),
+                  onTap: () => imageController.pickImage(),
                   child: Container(
                     width: 150,
                     height: 150,
@@ -98,33 +94,44 @@ class _ContactCreateViewState extends State<ContactCreateView> {
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: controller.image == null
-                        ? const Icon(Icons.camera_alt,
-                            size: 50, color: Colors.white)
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.file(controller.image!,
-                                fit: BoxFit.cover),
-                          ),
+                    child:
+                        imageController.image == null && currentContact == null
+                            ? const Icon(Icons.camera_alt,
+                                size: 50, color: Colors.white)
+                            : (imageController.image == null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.memory(
+                                        base64Decode(currentContact!.image),
+                                        fit: BoxFit.cover),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(imageController.image!,
+                                        fit: BoxFit.cover),
+                                  )),
                   ),
                 ),
               ),
               FieldBox(
                 title: 'Endereço',
-                inputWidget: controller.place == null
+                inputWidget: placeController.place == null &&
+                        (currentContact == null &&
+                            currentContact?.address == null)
                     ? Button(
                         onPress: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => GoogleMapSearchPlacesApi(
-                                  onSelect: controller.setPlace,
+                                  onSelect: placeController.setPlace,
                                 ), // O widget que você deseja empurrar
                               ));
                         },
                         title: 'Selecionar endereço',
                         backgroundColor: Colors.greenAccent)
-                    : Text(controller.place!.name),
+                    : Text(coalesce(placeController.place?.name,
+                        currentContact?.address.toString())),
               ),
             ],
           ),
@@ -135,23 +142,19 @@ class _ContactCreateViewState extends State<ContactCreateView> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<CreateContactController>(context);
-    // controller.clearInputs();
     return Scaffold(
-      appBar: AppBar(title: const Text('Novo contato')),
+      appBar: AppBar(
+          title:
+              Text(currentContact == null ? 'Novo contato' : 'Editar contato')),
       body: Column(
         children: [
-          _buildMainContent(controller),
+          _buildMainContent(context),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Button(
               backgroundColor: AppColors.primaryBlue,
-              onPress: () {
-                controller.submit(_nameController.text,
-                    _phoneNumberController.text, _emailController.text);
-                GoRouter.of(context).replace(Routes.contactsList);
-              },
+              onPress: onSubmit,
               title: 'Enviar',
               isLoading: false,
             ),

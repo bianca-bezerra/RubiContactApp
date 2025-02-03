@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,13 +9,14 @@ class ImageInput extends StatelessWidget {
   final List<XFile> selectedMedia;
   final Function() onPickGalleryImage;
   final Function(int) onRemoveImage;
+  final String? previousOnBase64;
 
-  const ImageInput({
-    super.key,
-    required this.selectedMedia,
-    required this.onPickGalleryImage,
-    required this.onRemoveImage,
-  });
+  const ImageInput(
+      {super.key,
+      required this.selectedMedia,
+      required this.onPickGalleryImage,
+      required this.onRemoveImage,
+      this.previousOnBase64});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class ImageInput extends StatelessWidget {
         child: Column(
           children: [
             selectedMedia.isEmpty
-                ? _buildEmptyState(context)
+                ? _buildEmptyState(context, previousOnBase64)
                 : SizedBox(
                     height: 120,
                     child: ListView.builder(
@@ -53,29 +55,39 @@ class ImageInput extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, String? previousOnBase64) {
     return InkWell(
       onTap: onPickGalleryImage,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.my_library_add_outlined,
-            size: 36,
-            color: AppColors.textPrimary,
-          ),
-          const SizedBox(width: 10),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
-            child: Text(
-              'Você pode adicionar até 5 imagens ou vídeos',
-              style: Theme.of(context).textTheme.bodySmall,
-              textAlign: TextAlign.center,
+      child: previousOnBase64 != null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.memory(
+                base64Decode(previousOnBase64),
+                height: 160,
+                width: 150,
+                fit: BoxFit.cover,
+              ),
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.my_library_add_outlined,
+                  size: 36,
+                  color: AppColors.textPrimary,
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  child: Text(
+                    'Você pode adicionar até 5 imagens ou vídeos',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
