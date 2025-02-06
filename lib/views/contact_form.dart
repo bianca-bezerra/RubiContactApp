@@ -10,7 +10,6 @@ import 'package:google_maps/components/places_search.dart';
 import 'package:google_maps/components/text_input.dart';
 import 'package:google_maps/controllers/contact_form_controller.dart';
 import 'package:google_maps/models/contact_entity.dart';
-import 'package:google_maps/utils/coalesce.dart';
 
 class ContactFormView extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -114,25 +113,68 @@ class ContactFormView extends StatelessWidget {
                 ),
               ),
               FieldBox(
-                title: 'Endereço',
-                inputWidget: placeController.place == null &&
-                        (currentContact == null &&
-                            currentContact?.address == null)
-                    ? Button(
-                        onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GoogleMapSearchPlacesApi(
-                                  onSelect: placeController.setPlace,
-                                ), // O widget que você deseja empurrar
-                              ));
-                        },
-                        title: 'Selecionar endereço',
-                        backgroundColor: Colors.greenAccent)
-                    : Text(coalesce(placeController.place?.name,
-                        currentContact?.address.toString())),
+                title: 'Localização',
+                inputWidget: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 12.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    side: const BorderSide(
+                        color: AppColors.textPrimary, width: 1),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GoogleMapSearchPlacesApi(
+                          onSelect: placeController.setPlace,
+                        ), // O widget que você deseja empurrar
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          placeController.place?.name ??
+                              currentContact?.address.toString() ??
+                              "Selecionar localização",
+                          style: Theme.of(context).textTheme.bodySmall,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.location_on,
+                        color: AppColors.textPrimary,
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              // FieldBox(
+              //   title: 'Endereço',
+              //   inputWidget: placeController.place == null &&
+              //           (currentContact == null &&
+              //               currentContact?.address == null)
+              //       ? Button(
+              //           onPress: () {
+              //             Navigator.push(
+              //               context,
+              //               MaterialPageRoute(
+              //                 builder: (context) => GoogleMapSearchPlacesApi(
+              //                   onSelect: placeController.setPlace,
+              //                 ), // O widget que você deseja empurrar
+              //               ),
+              //             );
+              //           },
+              //           title: 'Selecionar endereço',
+              //           backgroundColor: Colors.greenAccent)
+              //       : Text(coalesce(placeController.place?.name,
+              //           currentContact?.address.toString())),
+              // ),
             ],
           ),
         ),

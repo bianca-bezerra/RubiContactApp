@@ -23,7 +23,7 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.orange,
         title: const Text(
           'Login',
           style: TextStyle(color: Colors.white),

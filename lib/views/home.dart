@@ -23,6 +23,7 @@ class _HomeViewState extends State<HomeView> {
           style: TextStyle(color: Colors.white),
         ),
       ),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.orange,
                       border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -64,7 +65,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.orange,
                       border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -91,7 +92,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.orange,
                       border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),
@@ -121,7 +122,7 @@ class _HomeViewState extends State<HomeView> {
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(
-                      color: Colors.amber,
+                      color: Colors.orange,
                       border: Border.all(width: 8, color: Colors.transparent),
                       borderRadius: BorderRadius.circular(18),
                     ),

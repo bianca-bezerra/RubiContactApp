@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/place_entity.dart';
-import 'package:google_maps/routing/routes.dart';
-import 'package:google_maps/utils/scream.dart';
 import 'package:google_maps/views/contact_form.dart';
 import 'package:provider/provider.dart';
 
@@ -164,7 +162,7 @@ class _ContactFormControllerState extends State<ContactFormController> {
       _imageController.clear();
 
       if (mounted) {
-        GoRouter.of(context).go(Routes.contactsList);
+        context.pop();
       }
     } catch (e) {
       print(e);

@@ -44,7 +44,7 @@ class ContactRepository {
           return ContactEntity.fromMap(contacts[i]);
         },
       );
-
+      list.sort((a, b) => Comparable.compare(a.name, b.name));
       return list;
     } catch (ex) {
       print(ex);
