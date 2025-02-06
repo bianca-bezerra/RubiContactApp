@@ -57,6 +57,7 @@ class ContactListView extends StatelessWidget {
         onPressed: () {
           GoRouter.of(context).push(Routes.createContact);
         },
+        backgroundColor: const Color.fromARGB(255, 255, 193, 100),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
