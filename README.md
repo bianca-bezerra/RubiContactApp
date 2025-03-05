@@ -1,4 +1,3 @@
-
 # Agenda Rubi
 
 A simple app to manage your contacts.
