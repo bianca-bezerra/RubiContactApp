@@ -37,12 +37,11 @@ class ContactEntity {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'name': name,
-      'phoneNumber': phoneNumber,
+      'phone': phoneNumber,
       'email': email,
       'image': image,
-      'address': address.toMap(),
+      'latLng': address.toString(),
     };
   }
 
@@ -50,10 +49,10 @@ class ContactEntity {
     return ContactEntity(
       id: map['id'] as int,
       name: map['name'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      phoneNumber: map['phone'] as String,
       email: map['email'] as String,
       image: map['image'] as String,
-      address: Coordinates.fromMap(map['address'] as Map<String, dynamic>),
+      address: Coordinates.fromString(map['latLng'] as String),
     );
   }
 
@@ -123,14 +122,21 @@ class Coordinates {
     );
   }
 
+  factory Coordinates.fromString(String coordinates) {
+    final array = coordinates.split(", ");
+    return Coordinates(
+      latitude: double.parse(array[0]),
+      longitude: double.parse(array[1]),
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory Coordinates.fromJson(String source) =>
       Coordinates.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'Coordinates(latitude: $latitude, longitude: $longitude)';
+  String toString() => '$latitude, $longitude';
 
   @override
   bool operator ==(covariant Coordinates other) {

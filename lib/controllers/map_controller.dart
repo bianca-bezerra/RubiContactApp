@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps/models/contact_entity.dart';
 import 'package:google_maps/models/contact_repository.dart';
@@ -24,7 +25,6 @@ class MapPageControllerState extends State<MapPageController> {
   void initState() {
     super.initState();
     _contactRepository = ContactRepository();
-
     _fetchContacts();
   }
 
@@ -35,10 +35,11 @@ class MapPageControllerState extends State<MapPageController> {
 
     try {
       final result = await _contactRepository.getContacts();
+      final markers = await _createMarkers(result);
       setState(() {
         contacts = result;
         fetchedContacts = result;
-        _markers = _createMarkers(result);
+        _markers = markers;
       });
     } catch (e) {
       setState(() {
@@ -52,15 +53,15 @@ class MapPageControllerState extends State<MapPageController> {
     }
   }
 
-  Set<Marker> _createMarkers(List<ContactEntity> contacts) {
-    return contacts.map((contact) {
-      return Marker(
-        markerId: MarkerId(contact.id.toString()),
-        position: LatLng(contact.address.latitude, contact.address.longitude),
-        infoWindow: InfoWindow(title: contact.name),
-      );
-    }).toSet();
-  }
+  // Set<Marker> _createMarkers(List<ContactEntity> contacts) {
+  //   return contacts.map((contact) {
+  //     return Marker(
+  //       markerId: MarkerId(contact.id.toString()),
+  //       position: LatLng(contact.address.latitude, contact.address.longitude),
+
+  //     );
+  //   }).toSet();
+  // }
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
@@ -72,10 +73,41 @@ class MapPageControllerState extends State<MapPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return MapInterface(
+    return MapView(
       mapController: _controller,
       initialPosition: _initalPosition,
       markers: _markers,
+      isLoading: isLoading,
     );
+  }
+
+  Future<Set<Marker>> _createMarkers(List<ContactEntity> contacts) async {
+    Set<Marker> markers = {};
+
+    for (ContactEntity contact in contacts) {
+      markers.add(await _createMarker(contact));
+    }
+
+    return markers;
+  }
+
+  Future<Marker> _createMarker(ContactEntity contact) async {
+    late BitmapDescriptor icon;
+
+    // final http.Response response = await http.get(Uri.parse(contact.image));
+    icon = BitmapDescriptor.bytes(base64Decode(contact.image),
+        height: 100, width: 100);
+
+    Marker marker = Marker(
+      infoWindow: InfoWindow(title: contact.name),
+      markerId: MarkerId(contact.id.toString()),
+      position: LatLng((contact.address.latitude), contact.address.longitude),
+      icon: icon,
+      // onTap: () {
+      //   Get.dialog(Dialog(
+      //     child: LocationDescriptionPage(location: location),
+      //   ));}
+    );
+    return marker;
   }
 }
